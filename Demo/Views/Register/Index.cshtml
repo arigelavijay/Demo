@@ -1,0 +1,86 @@
+﻿@model Demo.Models.RegisterVm
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="@Url.Content("~/Scripts/jquery.min.js")"></script>
+</head>
+<body>
+    @using (Html.BeginForm("Save", "Register", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td>Name</td>
+                <td>@Html.TextBoxFor(x => x.register.name)</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>@Html.TextBoxFor(x => x.register.email)</td>
+            </tr>
+            <tr>
+                <td>phone</td>
+                <td>@Html.TextBoxFor(x => x.register.phone)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    @Html.HiddenFor(x => x.register.id)
+                    <input type="submit" id="btnRegister" value="@( Model.register == null ? "Register" : "Save" )" />
+                </td>
+            </tr>
+
+        </table>
+    }
+    @if (Model.data != null && Model.data.Count > 0)
+    {
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.data.Count; i++)
+                {
+                    <tr>
+                        <td>@Model.data[i].name</td>
+                        <td>@Model.data[i].email</td>
+                        <td>@Model.data[i].phone</td>
+                        <td>
+                            <button type="button" onclick="OnEdit('@Model.data[i].id')">Edit</button>
+                            <button type="button" onclick="OnDelete('@Model.data[i].id')">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        using (Html.BeginForm("Edit", "Register", FormMethod.Post, new { id = "frmAction" }))
+        {
+            @Html.Hidden("SelectedIndex")
+        }
+    }
+
+
+    <script type="text/javascript">
+        function OnEdit(idx) {
+            console.log(idx);
+            $('#SelectedIndex').val(idx);
+            $('#frmAction').submit();
+        }
+        function OnDelete(idx) {
+            console.log(idx);
+            $('#SelectedIndex').val(idx);
+            $('#frmAction').attr('action', '/Register/Delete');
+            $('#frmAction').submit();
+        }
+    </script>
+</body>
+</html>
